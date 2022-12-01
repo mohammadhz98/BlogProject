@@ -1,0 +1,1244 @@
+{
+	"info": {
+		"_postman_id": "9530ebab-7fe6-458e-b2f5-a3914e4022c2",
+		"name": "BlogProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24646861"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "List Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/users/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "user2",
+									"description": "Required & Unique",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "user2@user.com2",
+									"description": "Required & Unique",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"description": "Required & Unique",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "first name 1",
+									"description": "Nullable",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "last_name",
+									"value": "last name 1",
+									"description": "Nullable",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "True",
+									"description": "default True",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "is_admin",
+									"value": "False",
+									"description": "Default False",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/users/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/users/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/users/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/users/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/users/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User/me",
+			"item": [
+				{
+					"name": "Show Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/users/me",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Member",
+			"item": [
+				{
+					"name": "List Members",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/members/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"members",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "address",
+									"value": "addresss",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "phonee",
+									"type": "text"
+								},
+								{
+									"key": "user",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/members/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"members",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Member",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/members/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Member",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/members/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Member",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/members/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Member",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/members/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Guest",
+			"item": [
+				{
+					"name": "List Guests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/guests/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"guests",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Guest",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/guests/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"guests",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Guest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/guests/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"guests",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Guest",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/guests/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"guests",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Guest",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/guests/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"guests",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Guest",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/guests/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"guests",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "List Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "title1",
+									"type": "text"
+								},
+								{
+									"key": "short_description",
+									"value": "sh",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "desc",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/D:/Work/App/BlogProject/media/blog/header/images/CyberLab-Exploit.jpg"
+								},
+								{
+									"key": "writer",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/posts/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Post",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "titlepathc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/posts/1/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "List Comments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/posts/:postId/comments/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								":postId",
+								"comments",
+								""
+							],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "texttt",
+									"type": "text"
+								},
+								{
+									"key": "user",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/posts/:postId/comments/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								":postId",
+								"comments",
+								""
+							],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Comment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/posts/:postId/comments/:commentId/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								":postId",
+								"comments",
+								":commentId",
+								""
+							],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "6"
+								},
+								{
+									"key": "commentId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Comment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/:postId/comments/:commentId/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								":postId",
+								"comments",
+								":commentId",
+								""
+							],
+							"variable": [
+								{
+									"key": "postId",
+									"value": "1"
+								},
+								{
+									"key": "commentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Comment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/:postId/comments/:commentId/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								":postId",
+								"comments",
+								":commentId",
+								""
+							],
+							"variable": [
+								{
+									"key": "postId",
+									"value": null
+								},
+								{
+									"key": "commentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/posts/:postId/comments/:commentId/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"posts",
+								":postId",
+								"comments",
+								":commentId",
+								""
+							],
+							"variable": [
+								{
+									"key": "postId",
+									"value": null
+								},
+								{
+									"key": "commentId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "List Categorys",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/categories/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "cat1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_path}}/blog/categories/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/categories/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/categories/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/categories/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/categories/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tag",
+			"item": [
+				{
+					"name": "List Tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/tags/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"tags",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Tag",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/tags/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"tags",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Tag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/tags/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Tag",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/tags/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Tag",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/tags/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tag",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/tags/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Header",
+			"item": [
+				{
+					"name": "List Header",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/headers/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"headers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Header",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/headers/",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"headers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Header",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/headers/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"headers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Header",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/headers/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"headers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Header",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/headers/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"headers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Header",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{root_path}}/blog/headers/1",
+							"host": [
+								"{{root_path}}"
+							],
+							"path": [
+								"blog",
+								"headers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "root_path",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
