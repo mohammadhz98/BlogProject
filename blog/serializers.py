@@ -1,9 +1,14 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+from rest_framework.response import Response
 from .models import Member, Guest, Post, Comment, Category, Tag, Header
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.db import transaction
 import re
+from rest_framework.authtoken.models import Token
+from . import models
+
 
 class UserWriteSerializer(serializers.ModelSerializer):
     #todo: Each user can write own object
@@ -14,7 +19,13 @@ class UserWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', "username", "password", "first_name", "last_name", "email" )
+        fields = ('id', "username", "password", "first_name", "last_name", "email", "auth_token")
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'auth_token': {'read_only': True}
+        }
+
+        token = serializers.StringRelatedField(source='auth_token')
 
     @transaction.atomic
     def create(self, validated_data):  
@@ -23,7 +34,6 @@ class UserWriteSerializer(serializers.ModelSerializer):
         validated_data['password'] = encryptedpassword
         validated_data["is_staff"] = False
         validated_data["is_active"] = True
-
         user = super().create(validated_data)
         return user
 
@@ -79,8 +89,7 @@ class PostWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ["id", "title", "short_description", "description", "image", "writer", "tags", "category" ]
-
+        fields = ["id", "title", "short_description", "description", "image", "tags", "category" ]
 
     tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
 
@@ -90,7 +99,7 @@ class PostWriteSerializer(serializers.ModelSerializer):
         if Post.objects.filter(slug=slug):
             raise serializers.ValidationError(f"post with slug `{slug}` is already exists.")
         validated_data["slug"] = slug
-
+        validated_data["writer"] = self.context.get('request').user.member
         validated_data["status"] = "W"
 
         tags = validated_data.pop('tags', [])
@@ -116,32 +125,40 @@ class PostReadSerializer(serializers.ModelSerializer):
 
 
 class CommentWriteSerializer(serializers.ModelSerializer):
-    #todo: comment must be write based on user or guest
     class Meta:
         model = Comment
-        fields = ("id", "text", "user")
+        fields = ("id", "text", "email")
     
+    email = serializers.EmailField(required=False)
+
     @transaction.atomic
     def create(self, validated_data):
         validated_data['post_id'] = self.context['post_id']
         validated_data["status"] = "W"
+
+        user = self.context['request'].user
+        if user and hasattr(user, 'email') :
+            validated_data["email"] = user.email
+        elif self.validated_data.get('email', None):
+            validated_data["email"] = self.validated_data.get('email', "eror@gmail.com")
+        else:
+            raise serializers.ValidationError('Email khod ra vared konid!')
+
         comment = super().create(validated_data)
         return comment
 
 
 class CommentReadSerializer(serializers.ModelSerializer):
-    #todo: users can see just published comments or own comment
     class Meta:
         model = Comment
         fields = ('id', "text", "post", "user", "status")
 
-    user = serializers.HyperlinkedRelatedField(view_name="member-detail", read_only=True)
+    user = serializers.EmailField(source='email')
     post = serializers.HyperlinkedRelatedField(view_name="post-detail", read_only=True)
     status = serializers.CharField(source='get_status_display')
 
 
 class CategoryWriteSerializer(serializers.ModelSerializer):
-    #todo: just admin can change categories
 
     class Meta:
         model = Category
@@ -165,14 +182,12 @@ class CategoryReadSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    #todo: just writer can change tags
     class Meta:
         model = Tag
         fields = ('id', "title")
 
 
 class HeaderSerializer(serializers.ModelSerializer):
-    #todo: just admin can change header
 
     class Meta:
         model = Header

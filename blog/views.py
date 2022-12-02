@@ -1,14 +1,18 @@
 from django.views import View
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth.models import AnonymousUser
 from rest_framework.response import Response
 from rest_framework.exceptions import status
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from .models import Member, Guest, Post, Comment, Category, Tag, Header
+from rest_framework import viewsets, mixins
+from rest_framework.decorators import action, APIView
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
+from rest_framework.authtoken.models import Token
+from . import models
 from .serializers import UserWriteSerializer, UserReadSerializer, MemberWriteSerializer, MemberReadSerializer, GuestSerializer, PostWriteSerializer, PostReadSerializer, CommentWriteSerializer, CommentReadSerializer, CategoryWriteSerializer, CategoryReadSerializer, TagSerializer, HeaderSerializer
-
+from .permissions import IsAdminOrReadOnly, IsPostWriterOrReadOnly, IsWriterOrReadOnly
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -20,9 +24,18 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return UserWriteSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        response = Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        response.set('Authorization', 'Token 420f7a818286acf44f7698c55378efe5f407ab05')
+        return response
+
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.all()
+    queryset = models.Member.objects.all()
     
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -30,29 +43,21 @@ class MemberViewSet(viewsets.ModelViewSet):
         return MemberWriteSerializer
 
 
-@action(detail=False, methods=["GET", "PUT"])
-def me(self, request):
-    (member, created) = Member.objects.get_or_create(user_id=request.user.id)
-
-    if request.method == 'GET':
-        serializer = MemberReadSerializer(member)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = MemberReadSerializer(Member, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
 class GuestViewSet(viewsets.ModelViewSet):
-    queryset = Guest.objects.all()
+    queryset = models.Guest.objects.all()
     serializer_class = GuestSerializer
     
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.select_related("writer").select_related("category").prefetch_related("tags").prefetch_related("likes").all()
     serializer_class = PostReadSerializer
 
+    permission_classes = [IsPostWriterOrReadOnly]
+
+    def get_queryset(self):
+        if self.request.method == "GET":
+            return models.Post.objects.select_related("writer").select_related("category").prefetch_related("tags").prefetch_related("likes").filter(Q(status=models.Post.STATUS_PUBLISH) | Q(writer_id__user_id=self.request.user.id))
+        else:
+            return models.Post.objects.select_related("writer").select_related("category").prefetch_related("tags").prefetch_related("likes").filter()
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -60,12 +65,17 @@ class PostViewSet(viewsets.ModelViewSet):
         return PostWriteSerializer
 
 
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(mixins.CreateModelMixin, 
+                    mixins.RetrieveModelMixin, 
+                    mixins.ListModelMixin,
+                    viewsets.GenericViewSet):
     def get_queryset(self):
-        if self.request.method == "GET":
-            return Comment.objects.select_related("user").select_related("post").filter(post_id=self.kwargs['post_pk']).filter(Q(status=Comment.STATUS_PUBLISH) | Q(user_id=self.request.user.id))
+        if self.request.method == "GET" and self.request.user != AnonymousUser():
+            return models.Comment.objects.select_related("post").filter(post_id=self.kwargs['post_pk']).filter(Q(status=models.Comment.STATUS_PUBLISH) | Q(email=self.request.user.email))
+        elif self.request.method == "GET":
+            return models.Comment.objects.select_related("post").filter(post_id=self.kwargs['post_pk']).filter(status=models.Comment.STATUS_PUBLISH)
         else:
-            return Comment.objects.select_related("user").select_related("post").filter(post_id=self.kwargs['post_pk'])
+            return models.Comment.objects.select_related("post").filter(post_id=self.kwargs['post_pk'])
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -77,8 +87,10 @@ class CommentViewSet(viewsets.ModelViewSet):
    
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = models.Category.objects.all()
     serializer_class = CategoryReadSerializer
+
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -86,12 +98,43 @@ class CategoryViewSet(viewsets.ModelViewSet):
         return CategoryWriteSerializer
 
 
-class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all()
+class TagViewSet(mixins.CreateModelMixin, 
+                   mixins.RetrieveModelMixin, 
+                   mixins.ListModelMixin,
+                   viewsets.GenericViewSet):
+    queryset = models.Tag.objects.all()
     serializer_class = TagSerializer
     
+    permission_classes = (IsWriterOrReadOnly, IsAdminUser)
+
 
 class HeaderViewSet(viewsets.ModelViewSet):
-    queryset = Header.objects.all()
+    queryset = models.Header.objects.all()
     serializer_class = HeaderSerializer
+
+    permission_classes = (IsAdminOrReadOnly,)
     
+
+class auth(APIView):
+    authentication_classes = [TokenAuthentication]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        return [AllowAny()]
+
+    def get(self, request):
+        content =f"request.user : {request.user}    request.auth : {request.auth}"
+        return Response(content)
+    
+    def post(self, request):
+        username = request.data['username']
+        password = request.data['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            (token, _) = Token.objects.get_or_create(user=user)
+            response = Response(f"{token.key}")
+            response['headers'] = 'Authorization'
+            return response
+        return Response({'error':'eroor'})

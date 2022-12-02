@@ -61,7 +61,7 @@ class Comment(models.Model):
     ]
 
     text = models.TextField()
-    user = models.ForeignKey(Member, on_delete=models.CASCADE)
+    email = models.EmailField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=STATUS_WAIT)
 
