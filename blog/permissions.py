@@ -8,7 +8,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     """
     The request is admin as a user, or is a read-only request.
     """
-
     def has_permission(self, request, view):
         return bool(
             request.method in permissions.SAFE_METHODS or
@@ -16,6 +15,21 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.user.is_staff
         )
 
+class IsAdminOrOwnUserOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool( (request.method == "POST") or (request.user and request.user.is_authenticated) )
+    
+    def has_object_permission(self, request, view, obj):
+        return bool( (request.user.is_staff) or (obj == request.user) ) 
+            
+
+class IsAdminOrOwnMemberOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated)
+    
+    def has_object_permission(self, request, view, obj):
+        return bool( (request.user.is_staff) or (obj == request.user.member) ) 
+  
 
 class IsPostWriterOrReadOnly(permissions.BasePermission):
     """

@@ -1,0 +1,5 @@
+response code:
+    401 => Unauthenticate (example : Anonymous user)
+    403 => Unauthorize | Forbidden (example : Non admin user)
+    400 => Bad request (example : invalid data)
+    200 => Successful 

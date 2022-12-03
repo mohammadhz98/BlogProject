@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.response import Response
-from .models import Member, Guest, Post, Comment, Category, Tag, Header
+from .models import Member, Post, Comment, Category, Tag, Header
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.db import transaction
@@ -11,10 +11,7 @@ from . import models
 
 
 class UserWriteSerializer(serializers.ModelSerializer):
-    #todo: Each user can write own object
-
     #todo: Create user must be by email or number verification
-
     #todo: Create user must have google sign in
 
     class Meta:
@@ -26,12 +23,15 @@ class UserWriteSerializer(serializers.ModelSerializer):
         }
 
         token = serializers.StringRelatedField(source='auth_token')
+    
+    @transaction.atomic
+    def save(self, **kwargs):
+        encryptedpassword = make_password(self.validated_data['password'])     
+        self.validated_data['password'] = encryptedpassword
+        return super().save(**kwargs)
 
     @transaction.atomic
     def create(self, validated_data):  
-        encryptedpassword = make_password(validated_data['password'])
-        
-        validated_data['password'] = encryptedpassword
         validated_data["is_staff"] = False
         validated_data["is_active"] = True
         user = super().create(validated_data)
@@ -50,37 +50,30 @@ class UserReadSerializer(serializers.ModelSerializer):
 
         
 class MemberWriteSerializer(serializers.ModelSerializer):
-    #todo: create member is based on user auth
-    #todo: this permission must be just for own user
-
     class Meta:
         model = Member
-        fields = ('id', "address", "phone", "user")
-    
+        fields = ('id', "address", "phone")
+
+    @transaction.atomic
+    def save(self, **kwargs):
+        self.instance
+        self.validated_data['user_id'] = self.instance.user.id
+        return super().save(**kwargs)
+
     @transaction.atomic
     def create(self, validated_data):
         validated_data["is_writer"] = False
         member = super().create(validated_data)
         return member
-    
+
 
 class MemberReadSerializer(serializers.ModelSerializer):
-    #todo: create member is based on user auth
-    #todo: this permission must be just for own user
-
     class Meta:
         model = Member
         fields = ('id', "address", "phone", "user", "writer")
     
     user = UserReadSerializer()
     writer = serializers.BooleanField(source="is_writer")
-
-
-class GuestSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Guest
-        fields = ('id', "full_name", "email")
 
 
 class PostWriteSerializer(serializers.ModelSerializer):

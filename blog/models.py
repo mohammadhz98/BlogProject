@@ -12,14 +12,6 @@ class Member(models.Model):
         return self.user.username
 
 
-class Guest(models.Model):
-    full_name = models.CharField(max_length=40)
-    email = models.EmailField(unique=True)
-
-    def __str__(self) -> str:
-        return self.email
-
-
 class Post(models.Model):
     STATUS_PUBLISH = 'P'
     STATUS_DELETE = 'D'

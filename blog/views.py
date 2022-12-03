@@ -11,42 +11,46 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
 from rest_framework.authtoken.models import Token
 from . import models
-from .serializers import UserWriteSerializer, UserReadSerializer, MemberWriteSerializer, MemberReadSerializer, GuestSerializer, PostWriteSerializer, PostReadSerializer, CommentWriteSerializer, CommentReadSerializer, CategoryWriteSerializer, CategoryReadSerializer, TagSerializer, HeaderSerializer
-from .permissions import IsAdminOrReadOnly, IsPostWriterOrReadOnly, IsWriterOrReadOnly
+from .serializers import UserWriteSerializer, UserReadSerializer, MemberWriteSerializer, MemberReadSerializer, PostWriteSerializer, PostReadSerializer, CommentWriteSerializer, CommentReadSerializer, CategoryWriteSerializer, CategoryReadSerializer, TagSerializer, HeaderSerializer
+from .permissions import IsAdminOrReadOnly, IsAdminOrOwnUserOnly,  IsAdminOrOwnMemberOnly, IsPostWriterOrReadOnly, IsWriterOrReadOnly
 
 # Create your views here.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = get_user_model().objects.all()
-    
+class UserViewSet(viewsets.ModelViewSet):    
+    permission_classes = [IsAdminOrOwnUserOnly,]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return get_user_model().objects.all()
+        elif user.is_authenticated:
+            return get_user_model().objects.filter(id=user.id)
+        else:
+            return get_user_model().objects.all()
+
     def get_serializer_class(self):
         if self.request.method == "GET":
             return UserReadSerializer
         else:
             return UserWriteSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        response = Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        response.set('Authorization', 'Token 420f7a818286acf44f7698c55378efe5f407ab05')
-        return response
 
+class MemberViewSet(viewsets.ModelViewSet):    
+    permission_classes = [IsAdminOrOwnMemberOnly,]
 
-class MemberViewSet(viewsets.ModelViewSet):
-    queryset = models.Member.objects.all()
-    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_staff:
+            return models.Member.objects.all()
+        elif user.is_authenticated:
+            return models.Member.objects.filter(user_id=user.id)
+        else:
+            return models.Member.objects.all()
+
     def get_serializer_class(self):
         if self.request.method == "GET":
             return MemberReadSerializer
         return MemberWriteSerializer
 
-
-class GuestViewSet(viewsets.ModelViewSet):
-    queryset = models.Guest.objects.all()
-    serializer_class = GuestSerializer
-    
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostReadSerializer

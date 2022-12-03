@@ -90,11 +90,6 @@ class TagAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Guest)
-class GuestAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(models.Header)
 class HeaderAdmin(admin.ModelAdmin):
     pass
