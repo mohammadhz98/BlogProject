@@ -2,8 +2,6 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import permissions
 
 
-
-
 class IsAdminOrReadOnly(permissions.BasePermission):
     """
     The request is admin as a user, or is a read-only request.

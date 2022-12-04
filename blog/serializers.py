@@ -39,8 +39,6 @@ class UserWriteSerializer(serializers.ModelSerializer):
 
 
 class UserReadSerializer(serializers.ModelSerializer):
-    #todo: Just admin can see User list
-
     class Meta:
         model = get_user_model()
         fields = ('id', "username", "first_name", "last_name", "email", "active", "admin")
