@@ -8,24 +8,22 @@ from rest_framework.exceptions import status
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action, APIView
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, AllowAny 
 from rest_framework.authtoken.models import Token
 from . import models
 from .serializers import UserWriteSerializer, UserReadSerializer, MemberWriteSerializer, MemberReadSerializer, PostWriteSerializer, PostReadSerializer, CommentWriteSerializer, CommentReadSerializer, CategoryWriteSerializer, CategoryReadSerializer, TagSerializer, HeaderSerializer
-from .permissions import IsAdminOrReadOnly, IsAdminOrOwnUserOnly,  IsAdminOrOwnMemberOnly, IsPostWriterOrReadOnly, IsWriterOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAdminOrOwnUserOnly,  IsAdminOrOwnMemberOnly, IsPostWriterOrReadOnly, IsWriterOrReadOnly, IsUserOwner, IsMemberOwner, NotAllowAny
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):    
-    permission_classes = [IsAdminOrOwnUserOnly,]
-
+    queryset = get_user_model().objects.all()
+    
     def get_queryset(self):
         user = self.request.user
-        if user.is_staff:
+        if user.is_staff or user.is_anonymous:
             return get_user_model().objects.all()
         elif user.is_authenticated:
             return get_user_model().objects.filter(id=user.id)
-        else:
-            return get_user_model().objects.all()
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -33,23 +31,36 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return UserWriteSerializer
 
+    def get_permissions(self):
+        if (self.request.method == 'POST') or self.request.user.is_staff:
+            return [AllowAny(),]
+        elif self.request.user.is_anonymous:
+            return [NotAllowAny(),]
+        else:
+            return [IsUserOwner(),]
+
 
 class MemberViewSet(viewsets.ModelViewSet):    
-    permission_classes = [IsAdminOrOwnMemberOnly,]
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_staff:
+        if user.is_staff or user.is_anonymous:
             return models.Member.objects.all()
         elif user.is_authenticated:
             return models.Member.objects.filter(user_id=user.id)
-        else:
-            return models.Member.objects.all()
-
+    
     def get_serializer_class(self):
         if self.request.method == "GET":
             return MemberReadSerializer
         return MemberWriteSerializer
+
+    def get_permissions(self):
+        if (self.request.method == 'POST') or self.request.user.is_anonymous:
+            return [NotAllowAny(),]
+        elif self.request.user.is_staff:
+            return [AllowAny(),]
+        else:
+            return [IsMemberOwner(),]
 
 
 class PostViewSet(viewsets.ModelViewSet):

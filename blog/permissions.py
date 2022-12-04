@@ -13,12 +13,28 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.user.is_staff
         )
 
+
 class IsAdminOrOwnUserOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         return bool( (request.method == "POST") or (request.user and request.user.is_authenticated) )
     
     def has_object_permission(self, request, view, obj):
         return bool( (request.user.is_staff) or (obj == request.user) ) 
+
+
+class IsUserOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):       
+        return obj == request.user
+
+
+class IsMemberOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):       
+        return obj.user_id == request.user.id
+
+
+class NotAllowAny(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return False
             
 
 class IsAdminOrOwnMemberOnly(permissions.BasePermission):
@@ -49,6 +65,7 @@ class IsPostWriterOrReadOnly(permissions.BasePermission):
             return True
         else:
             return False
+
 
 class IsWriterOrReadOnly(permissions.BasePermission):
     """
